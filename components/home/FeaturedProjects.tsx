@@ -1,122 +1,145 @@
 "use client";
 
 import { useState } from "react";
-import { Section } from "@/components/ui/primitives";
-import { Reveal } from "@/components/ui/Reveal";
-import { COMPANY_DATA } from "@/lib/data";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, ArrowRight, ArrowUpRight, MapPin, Calendar } from "lucide-react";
+import { Eyebrow } from "@/components/ui/primitives";
 
-interface Project {
+export interface FeaturedProject {
     name: string;
+    slug: string;
+    sector: string;
     description: string;
-    folder?: string;
-    image?: string;
+    cover: string;
+    year?: string;
+    location?: string;
 }
 
-interface FeaturedProjectsProps {
-    projects: Project[];
-}
+export function FeaturedProjects({ projects }: { projects: FeaturedProject[] }) {
+    const [index, setIndex] = useState(0);
+    const [direction, setDirection] = useState(1);
 
-export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
-    const [activeIndex, setActiveIndex] = useState(0);
+    if (projects.length === 0) return null;
 
-    const nextSlide = () => {
-        setActiveIndex((prev) => (prev + 1) % projects.length);
+    const go = (next: number) => {
+        setDirection(next > index || (index === projects.length - 1 && next === 0) ? 1 : -1);
+        setIndex((next + projects.length) % projects.length);
     };
 
-    const prevSlide = () => {
-        setActiveIndex((prev) => (prev - 1 + projects.length) % projects.length);
-    };
-
-    const currentProject = projects[activeIndex];
-    if (!currentProject) return null;
+    const project = projects[index];
 
     return (
-        <Section className="bg-background overflow-hidden p-0 md:p-0 max-w-none">
-            <div className="flex flex-col lg:flex-row h-[80vh] md:h-screen w-full">
-
-                {/* Left: Content */}
-                <div className="w-full lg:w-1/3 bg-background border-r border-white/10 p-8 md:p-16 flex flex-col justify-center relative z-10">
-                    <Reveal>
-                        <h4 className="text-primary font-heading uppercase tracking-widest text-sm mb-6">Featured Works</h4>
-                    </Reveal>
+        <section className="relative border-t border-white/10">
+            <div className="grid lg:grid-cols-[minmax(0,1fr)_1.4fr]">
+                {/* Content */}
+                <div className="relative flex flex-col justify-center p-8 md:p-14 lg:p-16">
+                    <Eyebrow>Featured Works</Eyebrow>
 
                     <AnimatePresence mode="wait">
                         <motion.div
-                            key={activeIndex}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
+                            key={project.slug}
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -16 }}
                             transition={{ duration: 0.4 }}
+                            className="mt-8"
                         >
-                            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 leading-tight">
-                                {currentProject.name}
+                            <span className="font-heading text-xs uppercase tracking-[0.25em] text-accent">
+                                {project.sector}
+                            </span>
+                            <h2 className="mt-4 font-heading text-4xl font-bold uppercase leading-tight tracking-tight text-foreground md:text-5xl">
+                                {project.name}
                             </h2>
-                            <p className="text-white/60 mb-8 leading-relaxed max-w-sm">
-                                {currentProject.description}
+                            <p className="mt-5 max-w-md leading-relaxed text-muted-foreground">
+                                {project.description}
                             </p>
 
-                            <Link href={`/projects`} className="inline-flex items-center gap-2 bg-white/5 hover:bg-primary hover:text-background text-white px-6 py-3 rounded-none border border-white/10 hover:border-transparent transition-all duration-300 font-heading tracking-wide uppercase text-sm">
-                                View Case Study <ArrowUpRight size={18} />
+                            <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm text-foreground/70">
+                                {project.location && (
+                                    <span className="inline-flex items-center gap-2">
+                                        <MapPin size={15} className="text-accent" />
+                                        {project.location}
+                                    </span>
+                                )}
+                                {project.year && (
+                                    <span className="inline-flex items-center gap-2">
+                                        <Calendar size={15} className="text-accent" />
+                                        {project.year}
+                                    </span>
+                                )}
+                            </div>
+
+                            <Link
+                                href={`/projects/${project.slug}`}
+                                className="group mt-8 inline-flex items-center gap-2 border-b border-accent/40 pb-1 font-heading text-sm uppercase tracking-wider text-accent transition-colors hover:border-accent"
+                            >
+                                View Case Study
+                                <ArrowUpRight
+                                    size={16}
+                                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                                />
                             </Link>
                         </motion.div>
                     </AnimatePresence>
 
                     {/* Controls */}
-                    <div className="absolute bottom-8 left-8 md:bottom-16 md:left-16 flex gap-4">
-                        <button onClick={prevSlide} className="w-12 h-12 border border-white/20 hover:border-primary hover:text-primary text-white flex items-center justify-center transition-colors">
-                            <ArrowLeft size={20} />
+                    <div className="mt-12 flex items-center gap-4">
+                        <button
+                            onClick={() => go(index - 1)}
+                            aria-label="Previous project"
+                            className="flex h-12 w-12 items-center justify-center border border-white/15 text-foreground transition-colors hover:border-accent hover:text-accent"
+                        >
+                            <ArrowLeft size={18} />
                         </button>
-                        <button onClick={nextSlide} className="w-12 h-12 border border-white/20 hover:border-primary hover:text-primary text-white flex items-center justify-center transition-colors">
-                            <ArrowRight size={20} />
+                        <button
+                            onClick={() => go(index + 1)}
+                            aria-label="Next project"
+                            className="flex h-12 w-12 items-center justify-center border border-white/15 text-foreground transition-colors hover:border-accent hover:text-accent"
+                        >
+                            <ArrowRight size={18} />
                         </button>
-                        <div className="flex items-center gap-2 ml-4 text-sm font-heading tracking-widest text-white/40">
-                            <span className="text-primary">0{activeIndex + 1}</span> / 0{projects.length}
+                        <div className="ml-2 font-heading text-sm tracking-widest text-muted-foreground">
+                            <span className="text-accent">
+                                {String(index + 1).padStart(2, "0")}
+                            </span>
+                            {" / "}
+                            {String(projects.length).padStart(2, "0")}
                         </div>
                     </div>
                 </div>
 
-                {/* Right: Image */}
-                <div className="w-full lg:w-2/3 relative bg-neutral-900 overflow-hidden">
-                    <AnimatePresence mode="wait">
+                {/* Image */}
+                <div className="relative min-h-[60vh] overflow-hidden bg-surface-2 lg:min-h-[80vh]">
+                    <AnimatePresence mode="popLayout" custom={direction}>
                         <motion.div
-                            key={activeIndex}
-                            initial={{ opacity: 0, scale: 1.1 }}
+                            key={project.slug}
+                            custom={direction}
+                            initial={{ opacity: 0, scale: 1.08 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.7 }}
-                            className="absolute inset-0 w-full h-full"
+                            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                            className="absolute inset-0"
                         >
-                            {/* Placeholder image logic - in real usage would map to specific paths */}
-                            <div className={cn(
-                                "w-full h-full bg-cover bg-center",
-                                "grayscale hover:grayscale-0 transition-all duration-700"
-                            )}
-                                style={{
-                                    // Fallback to a solid color or pattern if no image
-                                    backgroundImage: currentProject.image
-                                        ? `url('${currentProject.image}')`
-                                        : `url('/patterns/mesh.png'), linear-gradient(to bottom right, #1a1a1a, #0a0a0a)`
-                                }}
-                            >
-                                {/* Overlay Gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80 lg:opacity-40" />
-
-                                {/* Temporary Text Placeholder for Image */}
-                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span className="text-[10vw] font-heading font-bold text-white/5 uppercase tracking-tighter">
-                                        {(currentProject.name.split(' ')[0])}
-                                    </span>
-                                </div>
-                            </div>
+                            <Image
+                                src={project.cover}
+                                alt={project.name}
+                                fill
+                                sizes="(max-width: 1024px) 100vw, 60vw"
+                                className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent lg:from-background/40" />
                         </motion.div>
                     </AnimatePresence>
-                </div>
 
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                        <span className="select-none font-heading text-[18vw] font-bold uppercase leading-none tracking-tighter text-white/5 lg:text-[10vw]">
+                            {project.name.split(" ")[0]}
+                        </span>
+                    </div>
+                </div>
             </div>
-        </Section>
+        </section>
     );
 }

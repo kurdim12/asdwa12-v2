@@ -1,155 +1,192 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Section } from "@/components/ui/primitives";
+import { Section, Eyebrow } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
+import { ProjectGallery } from "@/components/projects/ProjectGallery";
+import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 import { COMPANY_DATA } from "@/lib/data";
-import Link from "next/link";
-import { ArrowLeft, MapPin, Calendar, Camera } from "lucide-react";
-import fs from 'fs';
-import path from 'path';
+import { ArrowLeft, ArrowRight, MapPin, Calendar, Building2, Hammer, Camera } from "lucide-react";
 
 interface PageProps {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-    const allProjects = COMPANY_DATA.projects.categories.flatMap(c => c.projects);
-    return allProjects.map((project) => ({
-        slug: project.name,
-    }));
+export function generateStaticParams() {
+    return getAllProjects().map((p) => ({ slug: p.slug }));
 }
 
-export default function ProjectDetail({ params }: PageProps) {
-    // Decode slug back to name
-    const projectName = decodeURIComponent(params.slug);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const project = getProjectBySlug(slug);
+    if (!project) return { title: "Project Not Found" };
+    return {
+        title: project.name,
+        description: project.description,
+        openGraph: { images: [{ url: project.cover }] },
+    };
+}
 
-    const allProjects = COMPANY_DATA.projects.categories.flatMap(c => c.projects.map(p => ({ ...p, categoryName: c.name.en })));
-    const project = allProjects.find(p => p.name === projectName);
+export default async function ProjectDetail({ params }: PageProps) {
+    const { slug } = await params;
+    const project = getProjectBySlug(slug);
 
-    if (!project) {
-        return (
-            <main className="bg-background min-h-screen flex items-center justify-center text-white">
-                <div className="text-center">
-                    <h1 className="text-4xl font-heading font-bold mb-4">Project Not Found</h1>
-                    <Link href="/projects" className="text-primary hover:underline">Return to Portfolio</Link>
-                </div>
-            </main>
-        )
-    }
+    if (!project) notFound();
 
-    // Dynamic Image Loading
-    let images: string[] = [];
-    try {
-        if (project.folder) {
-            const projectsDir = path.join(process.cwd(), 'public', project.folder);
-            if (fs.existsSync(projectsDir)) {
-                images = fs.readdirSync(projectsDir)
-                    .filter(file => /\.(jpg|jpeg|png|webp)$/i.test(file))
-                    .map(file => `/${project.folder}/${file}`);
-            }
-        }
-    } catch (error) {
-        console.error("Error reading project images:", error);
-    }
+    // Prev / next for in-portfolio navigation.
+    const all = getAllProjects();
+    const idx = all.findIndex((p) => p.slug === project.slug);
+    const prev = all[(idx - 1 + all.length) % all.length];
+    const next = all[(idx + 1) % all.length];
 
-    // Use the first image as hero background, or a default
-    const heroImage = images.length > 0 ? images[0] : '/patterns/mesh.png';
+    const details = [
+        { icon: Building2, label: "Sector", value: project.categoryName },
+        { icon: MapPin, label: "Location", value: project.location },
+        { icon: Calendar, label: "Year", value: project.year },
+        { icon: Hammer, label: "Scope", value: project.scope },
+        { icon: Building2, label: "Client", value: project.client },
+        {
+            icon: Camera,
+            label: "Photos",
+            value: project.images.length ? `${project.images.length} available` : undefined,
+        },
+    ].filter((d) => d.value);
 
     return (
-        <main className="bg-background min-h-screen">
+        <>
             <Navbar />
-
-            {/* Hero Banner */}
-            <div className="h-[60vh] relative overflow-hidden bg-neutral-900">
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent z-10" />
-
-                {/* Hero Image */}
-                <div
-                    className="absolute inset-0 bg-cover bg-center opacity-50 grayscale"
-                    style={{ backgroundImage: `url('${heroImage}')` }}
-                />
-
-                <div className="container mx-auto px-4 h-full flex flex-col justify-end pb-16 relative z-20">
-                    <Link href="/projects" className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-6 transition-colors">
-                        <ArrowLeft size={20} /> Back to Projects
-                    </Link>
-
-                    <Reveal>
-                        <div className="text-primary font-heading uppercase tracking-widest text-sm mb-4">
-                            {project.categoryName}
-                        </div>
-                    </Reveal>
-                    <Reveal delay={0.2}>
-                        <h1 className="text-5xl md:text-7xl font-heading font-bold text-white max-w-4xl">
-                            {project.name}
-                        </h1>
-                    </Reveal>
-                </div>
-            </div>
-
-            <Section className="py-20">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-                    {/* Project Info Sidebar */}
-                    <div className="space-y-8">
-                        <div className="p-6 border border-white/10 rounded-lg bg-white/5">
-                            <h3 className="text-xl font-heading font-bold text-white mb-6 border-b border-white/10 pb-4">Project Details</h3>
-
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-3 text-white/70">
-                                    <MapPin className="text-primary" size={20} />
-                                    <span>Jordan</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-white/70">
-                                    <Calendar className="text-primary" size={20} />
-                                    <span>2024 (Completed)</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-white/70">
-                                    <Camera className="text-primary" size={20} />
-                                    <span>{images.length} Photos Available</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Main Content */}
-                    <div className="lg:col-span-2">
+            <main>
+                {/* Hero banner */}
+                <section className="relative h-[70vh] min-h-[480px] overflow-hidden">
+                    <Image
+                        src={project.cover}
+                        alt={project.name}
+                        fill
+                        priority
+                        sizes="100vw"
+                        className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
+                    <div className="container relative z-10 flex h-full flex-col justify-end pb-14">
+                        <Link
+                            href="/projects"
+                            className="mb-6 inline-flex w-fit items-center gap-2 text-sm text-foreground/70 transition-colors hover:text-foreground"
+                        >
+                            <ArrowLeft size={18} /> Back to Projects
+                        </Link>
                         <Reveal>
-                            <h2 className="text-3xl font-heading font-bold text-white mb-6">About the Project</h2>
-                            <p className="text-white/70 text-lg leading-relaxed mb-8">
-                                {project.description}
-                                <br /><br />
-                                This project represents a significant milestone in Jordan's infrastructure development.
-                                Utilizing state-of-the-art engineering techniques and adhering to the highest safety and quality standards (ISO 9001),
-                                {COMPANY_DATA.company.name.en} successfully delivered this project on time and within budget.
-                            </p>
+                            <Eyebrow>{project.categoryName}</Eyebrow>
                         </Reveal>
+                        <Reveal delay={0.1}>
+                            <h1 className="mt-5 max-w-4xl font-heading text-5xl font-bold uppercase leading-[0.95] tracking-tightest text-foreground md:text-7xl">
+                                {project.name}
+                            </h1>
+                        </Reveal>
+                    </div>
+                </section>
 
-                        {/* Gallery */}
-                        <div className="mt-16">
-                            <h3 className="text-2xl font-heading font-bold text-white mb-8">Project Gallery</h3>
-                            {images.length > 0 ? (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {images.map((img, i) => (
-                                        <div key={i} className="aspect-video bg-neutral-800 rounded-lg border border-white/5 hover:border-primary/50 transition-colors relative group overflow-hidden">
-                                            <img
-                                                src={img}
-                                                alt={`${project.name} photo ${i + 1}`}
-                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                                            />
+                <Section>
+                    <div className="grid gap-14 lg:grid-cols-3">
+                        {/* Sidebar */}
+                        <aside className="lg:col-span-1">
+                            <div className="border border-white/10 bg-surface p-8">
+                                <h2 className="border-b border-white/10 pb-4 font-heading text-lg font-bold uppercase tracking-wide text-foreground">
+                                    Project Details
+                                </h2>
+                                <dl className="mt-6 space-y-5">
+                                    {details.map((d) => (
+                                        <div key={d.label} className="flex items-start gap-3">
+                                            <d.icon className="mt-0.5 shrink-0 text-accent" size={18} />
+                                            <div>
+                                                <dt className="text-xs uppercase tracking-widest text-muted-foreground">
+                                                    {d.label}
+                                                </dt>
+                                                <dd className="mt-0.5 text-foreground">{d.value}</dd>
+                                            </div>
                                         </div>
                                     ))}
+                                </dl>
+                            </div>
+                        </aside>
+
+                        {/* Main */}
+                        <div className="lg:col-span-2">
+                            <Reveal>
+                                <h2 className="font-heading text-3xl font-bold uppercase tracking-tight text-foreground">
+                                    About the Project
+                                </h2>
+                            </Reveal>
+                            <Reveal delay={0.1}>
+                                <div className="mt-6 space-y-5 text-lg leading-relaxed text-muted-foreground">
+                                    <p>{project.description}</p>
+                                    <p>
+                                        This project represents a significant milestone in
+                                        Jordan&apos;s infrastructure development. Using
+                                        state-of-the-art engineering techniques and adhering to the
+                                        highest safety and quality standards (ISO 9001),{" "}
+                                        {COMPANY_DATA.company.name.en} delivered it on time and
+                                        within budget.
+                                    </p>
                                 </div>
-                            ) : (
-                                <div className="text-white/40 italic p-8 border border-white/10 rounded-lg text-center">
-                                    No photos available for this project.
-                                </div>
-                            )}
+                            </Reveal>
                         </div>
                     </div>
-                </div>
-            </Section>
 
+                    {/* Gallery */}
+                    <div className="mt-20">
+                        <Reveal>
+                            <h2 className="mb-8 font-heading text-2xl font-bold uppercase tracking-tight text-foreground">
+                                Project Gallery
+                            </h2>
+                        </Reveal>
+                        <ProjectGallery images={project.images} name={project.name} />
+                    </div>
+                </Section>
+
+                {/* Prev / next */}
+                <section className="border-t border-white/10">
+                    <div className="container grid sm:grid-cols-2">
+                        <Link
+                            href={`/projects/${prev.slug}`}
+                            className="group flex items-center gap-4 border-b border-white/10 py-10 sm:border-b-0 sm:border-r"
+                        >
+                            <ArrowLeft
+                                size={22}
+                                className="shrink-0 text-accent transition-transform duration-300 group-hover:-translate-x-1"
+                            />
+                            <div>
+                                <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                                    Previous
+                                </div>
+                                <div className="font-heading text-lg font-bold uppercase tracking-wide text-foreground group-hover:text-accent">
+                                    {prev.name}
+                                </div>
+                            </div>
+                        </Link>
+                        <Link
+                            href={`/projects/${next.slug}`}
+                            className="group flex items-center justify-end gap-4 py-10 text-right"
+                        >
+                            <div>
+                                <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                                    Next
+                                </div>
+                                <div className="font-heading text-lg font-bold uppercase tracking-wide text-foreground group-hover:text-accent">
+                                    {next.name}
+                                </div>
+                            </div>
+                            <ArrowRight
+                                size={22}
+                                className="shrink-0 text-accent transition-transform duration-300 group-hover:translate-x-1"
+                            />
+                        </Link>
+                    </div>
+                </section>
+            </main>
             <Footer />
-        </main>
+        </>
     );
 }

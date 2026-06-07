@@ -1,27 +1,53 @@
 import type { Metadata } from "next";
-import { Inter, Oswald, Noto_Kufi_Arabic } from "next/font/google";
+import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const oswald = Oswald({ subsets: ["latin"], variable: "--font-oswald" });
-const notoKufi = Noto_Kufi_Arabic({ subsets: ["arabic"], variable: "--font-noto-kufi" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+const oswald = Oswald({
+  subsets: ["latin"],
+  variable: "--font-oswald",
+  display: "swap",
+});
+
+const SITE_DESCRIPTION =
+  "Marwan Ahmad Alkurdi & Partners — 25 years engineering Jordan's dams, power stations and national infrastructure. Specialized injection, heavy civil works and equipment.";
 
 export const metadata: Metadata = {
-  title: "Marwan Ahmad Alkurdi & Partners",
-  description: "25 Years of Engineering Excellence in Jordan - Dams, Power Stations, & Infrastructure",
-  icons: {
-    icon: '/favicon.ico',
+  metadataBase: new URL("https://mkurdi.com"),
+  title: {
+    default: "Marwan Ahmad Alkurdi & Partners | Engineering Jordan's Future",
+    template: "%s | M. Kurdi & Partners",
+  },
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "Marwan Alkurdi",
+    "construction Jordan",
+    "dam construction",
+    "infrastructure Jordan",
+    "civil engineering Amman",
+    "Dissi Pipeline",
+  ],
+  icons: { icon: "/favicon.ico" },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Marwan Ahmad Alkurdi & Partners",
+    title: "Marwan Ahmad Alkurdi & Partners | Engineering Jordan's Future",
+    description: SITE_DESCRIPTION,
+    images: [{ url: "/images/hero/1.jpg", width: 1200, height: 630 }],
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} ${oswald.variable} ${notoKufi.variable} bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground overflow-x-hidden`}>
+    <html lang="en" className={`${inter.variable} ${oswald.variable}`}>
+      <body className="bg-background font-body text-foreground antialiased overflow-x-hidden">
         {children}
       </body>
     </html>

@@ -1,121 +1,103 @@
-"use client";
-
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Section, Button } from "@/components/ui/primitives";
-import { Reveal } from "@/components/ui/Reveal";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Section } from "@/components/ui/primitives";
+import { ContactForm } from "@/components/contact/ContactForm";
 import { COMPANY_DATA } from "@/lib/data";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+
+export const metadata: Metadata = {
+    title: "Contact",
+    description:
+        "Get in touch with Marwan Ahmad Alkurdi & Partners — 7th Circle, Amman, Jordan.",
+};
 
 export default function ContactPage() {
     const { contact } = COMPANY_DATA;
 
+    const items = [
+        { icon: MapPin, label: "Headquarters", value: contact.address.en },
+        {
+            icon: Phone,
+            label: "Phone",
+            value: contact.phone,
+            href: `tel:${contact.phoneRaw}`,
+            note: `Fax: ${contact.fax}`,
+        },
+        { icon: Mail, label: "Email", value: contact.email, href: `mailto:${contact.email}` },
+        {
+            icon: Clock,
+            label: "Working Hours",
+            value: "Sunday – Thursday, 8:00 AM – 5:00 PM",
+            note: "Friday – Saturday: Closed",
+        },
+    ];
+
     return (
-        <main className="bg-background min-h-screen">
+        <>
             <Navbar />
-
-            <div className="pt-32 pb-16 container mx-auto px-4 md:px-8">
-                <Reveal>
-                    <h1 className="text-5xl md:text-7xl font-heading font-bold text-white mb-6">Contact Us</h1>
-                </Reveal>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-16">
-                    {/* Contact Info */}
-                    <div className="space-y-12">
-                        <Reveal delay={0.2}>
-                            <p className="text-white/60 text-lg max-w-md mb-8">
-                                Interested in partnering with us? Reach out to our team to discuss your infrastructure needs.
-                            </p>
-                        </Reveal>
-
-                        <Reveal delay={0.3}>
-                            <div className="space-y-8">
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-primary shrink-0">
-                                        <MapPin size={24} />
+            <main>
+                <PageHeader
+                    eyebrow="Contact Us"
+                    title="Let's discuss your project"
+                    subtitle="Interested in partnering with us? Reach out and our engineers will be in touch."
+                />
+                <Section>
+                    <div className="grid gap-14 lg:grid-cols-2">
+                        {/* Info */}
+                        <div className="space-y-8">
+                            {items.map((item) => (
+                                <div key={item.label} className="flex items-start gap-5">
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-surface text-accent">
+                                        <item.icon size={22} />
                                     </div>
                                     <div>
-                                        <h3 className="text-white font-heading font-bold mb-2">Headquarters</h3>
-                                        <p className="text-white/60 leading-relaxed font-body">
-                                            {contact.address.en}
-                                        </p>
+                                        <h3 className="font-heading font-bold uppercase tracking-wide text-foreground">
+                                            {item.label}
+                                        </h3>
+                                        {item.href ? (
+                                            <a
+                                                href={item.href}
+                                                className="mt-1 block text-muted-foreground transition-colors hover:text-foreground"
+                                            >
+                                                {item.value}
+                                            </a>
+                                        ) : (
+                                            <p className="mt-1 text-muted-foreground">{item.value}</p>
+                                        )}
+                                        {item.note && (
+                                            <p className="mt-0.5 text-sm text-muted-foreground/70">
+                                                {item.note}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
+                            ))}
 
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-primary shrink-0">
-                                        <Phone size={24} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-white font-heading font-bold mb-2">Phone</h3>
-                                        <p className="text-white/60 font-body hover:text-white transition-colors">
-                                            <a href={`tel:${contact.phone}`}>{contact.phone}</a>
-                                        </p>
-                                        <p className="text-white/60 font-body">
-                                            Fax: {contact.fax}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-primary shrink-0">
-                                        <Mail size={24} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-white font-heading font-bold mb-2">Email</h3>
-                                        <p className="text-white/60 font-body hover:text-white transition-colors">
-                                            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-primary shrink-0">
-                                        <Clock size={24} />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-white font-heading font-bold mb-2">Working Hours</h3>
-                                        <p className="text-white/60 font-body">
-                                            Sunday - Thursday: 8:00 AM - 5:00 PM <br />
-                                            Friday - Saturday: Closed
-                                        </p>
-                                    </div>
-                                </div>
+                            {/* Map */}
+                            <div className="overflow-hidden border border-white/10">
+                                <iframe
+                                    src={contact.mapEmbed}
+                                    title="Office location map"
+                                    className="h-72 w-full grayscale"
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                />
                             </div>
-                        </Reveal>
-                    </div>
-
-                    {/* Form */}
-                    <Reveal delay={0.4} width="100%">
-                        <div className="bg-white/5 border border-white/10 p-8 md:p-12 rounded-lg">
-                            <h3 className="text-2xl font-heading font-bold text-white mb-6">Send Message</h3>
-                            <form className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-xs uppercase tracking-widest text-white/40 font-heading">Name</label>
-                                        <input type="text" className="w-full bg-background border border-white/10 rounded-none p-4 text-white focus:border-primary focus:outline-none transition-colors" placeholder="John Doe" />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-xs uppercase tracking-widest text-white/40 font-heading">Email</label>
-                                        <input type="email" className="w-full bg-background border border-white/10 rounded-none p-4 text-white focus:border-primary focus:outline-none transition-colors" placeholder="john@example.com" />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs uppercase tracking-widest text-white/40 font-heading">Subject</label>
-                                    <input type="text" className="w-full bg-background border border-white/10 rounded-none p-4 text-white focus:border-primary focus:outline-none transition-colors" placeholder="Project Inquiry" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs uppercase tracking-widest text-white/40 font-heading">Message</label>
-                                    <textarea rows={4} className="w-full bg-background border border-white/10 rounded-none p-4 text-white focus:border-primary focus:outline-none transition-colors" placeholder="Tell us about your project..." />
-                                </div>
-                                <Button className="w-full">Send Message</Button>
-                            </form>
                         </div>
-                    </Reveal>
-                </div>
-            </div>
 
+                        {/* Form */}
+                        <div className="border border-white/10 bg-surface p-8 md:p-10">
+                            <h2 className="mb-6 font-heading text-2xl font-bold uppercase tracking-tight text-foreground">
+                                Send a Message
+                            </h2>
+                            <ContactForm />
+                        </div>
+                    </div>
+                </Section>
+            </main>
             <Footer />
-        </main>
+        </>
     );
 }

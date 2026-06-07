@@ -1,70 +1,79 @@
-"use client";
-
-import { Section } from "@/components/ui/primitives";
+import Image from "next/image";
+import { Section, Eyebrow, ButtonLink } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { COMPANY_DATA } from "@/lib/data";
-import { Trophy, Users, Building, ShieldCheck } from "lucide-react";
 
 export function Legacy() {
-    const stats = [
-        { label: "Years Experience", value: "25+", icon: Trophy },
-        { label: "Major Projects", value: "50+", icon: Building },
-        { label: "Expert Engineers", value: "120+", icon: Users },
-        { label: "ISO Certified", value: "9001", icon: ShieldCheck },
-    ];
+    const { stats } = COMPANY_DATA;
 
     return (
-        <Section className="bg-background relative">
-            <div className="flex flex-col md:flex-row gap-16 items-center">
-                {/* Text Content */}
-                <div className="flex-1">
+        <Section className="overflow-hidden">
+            <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+                {/* Image */}
+                <Reveal width="100%" className="order-2 lg:order-1">
+                    <div className="group relative aspect-[4/5] overflow-hidden md:aspect-square">
+                        <Image
+                            src="/images/anniversary.jpg"
+                            alt="25 years of engineering excellence"
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 p-8">
+                            <div className="font-heading text-7xl font-bold leading-none text-gold">
+                                25
+                            </div>
+                            <div className="mt-1 font-heading text-sm uppercase tracking-[0.25em] text-foreground/80">
+                                Years of Excellence
+                            </div>
+                        </div>
+                        {/* Corner frame accent */}
+                        <div className="pointer-events-none absolute right-6 top-6 h-12 w-12 border-r-2 border-t-2 border-accent/60" />
+                    </div>
+                </Reveal>
+
+                {/* Copy */}
+                <div className="order-1 lg:order-2">
                     <Reveal>
-                        <h4 className="text-primary font-heading uppercase tracking-widest text-sm mb-4">Our Legacy</h4>
+                        <Eyebrow>Our Legacy</Eyebrow>
                     </Reveal>
-                    <Reveal delay={0.3}>
-                        <h2 className="text-4xl md:text-5xl font-heading font-bold text-white mb-6 leading-tight">
-                            Engineering the <br /> Future of Jordan.
+                    <Reveal delay={0.1}>
+                        <h2 className="mt-6 font-heading text-4xl font-bold uppercase leading-tight tracking-tight text-foreground md:text-5xl">
+                            A quarter century building Jordan&apos;s future
                         </h2>
                     </Reveal>
-                    <Reveal delay={0.4}>
-                        <p className="text-white/60 text-lg leading-relaxed mb-8">
-                            {COMPANY_DATA.company.name.en} has been a cornerstone of Jordan's infrastructure development for over two decades.
-                            From the massive **Dissi Pipeline** to critical **Dam Construction**, we deliver engineering solutions that stand the test of time.
-                            Authorized by the highest standards and Royal Patronage.
+                    <Reveal delay={0.18}>
+                        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+                            From the Yarmouk&apos;s dams to the 325-kilometre Dissi water
+                            conveyor, {COMPANY_DATA.company.name.en} has been a cornerstone of the
+                            Kingdom&apos;s infrastructure. We pair deep geotechnical expertise with
+                            disciplined project delivery — engineering solutions that endure.
                         </p>
                     </Reveal>
 
-                    {/* Statistics Grid */}
-                    <div className="grid grid-cols-2 gap-8 mt-12">
+                    {/* Stats */}
+                    <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10">
                         {stats.map((stat, i) => (
-                            <Reveal key={i} delay={0.5 + (i * 0.1)}>
-                                <div className="flex items-start gap-4 p-4 border border-white/5 bg-white/5 rounded-lg hover:bg-white/10 transition-colors group">
-                                    <stat.icon className="w-8 h-8 text-primary group-hover:scale-110 transition-transform" />
-                                    <div>
-                                        <div className="text-3xl font-heading font-bold text-white">{stat.value}</div>
-                                        <div className="text-sm text-white/50">{stat.label}</div>
+                            <Reveal key={stat.label} delay={0.1 + i * 0.08} width="100%">
+                                <div className="bg-surface p-6 transition-colors hover:bg-surface-2">
+                                    <div className="font-heading text-4xl font-bold text-foreground">
+                                        {stat.value}
+                                        <span className="text-accent">{stat.suffix}</span>
+                                    </div>
+                                    <div className="mt-1 text-sm text-muted-foreground">
+                                        {stat.label}
                                     </div>
                                 </div>
                             </Reveal>
                         ))}
                     </div>
-                </div>
 
-                {/* Visual / Image */}
-                <div className="flex-1 w-full h-[500px] relative">
-                    <Reveal width="100%" delay={0.6}>
-                        <div className="w-full h-[500px] bg-neutral-800 rounded-lg overflow-hidden relative group">
-                            {/* Placeholder for now, in real app would be an image tag */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay z-10" />
-                            <img
-                                src="/images/Logo High.jpg" // Using logo for now as placeholder or 25 years image if I copied it
-                                alt="25 Years Experience"
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                            />
-                            <div className="absolute bottom-6 left-6 z-20">
-                                <div className="text-6xl font-heading font-bold text-white">25</div>
-                                <div className="text-xl text-primary font-heading uppercase tracking-widest">Years of Excellence</div>
-                            </div>
+                    <Reveal delay={0.2}>
+                        <div className="mt-10">
+                            <ButtonLink href="/about" variant="outline">
+                                More About Us
+                            </ButtonLink>
                         </div>
                     </Reveal>
                 </div>

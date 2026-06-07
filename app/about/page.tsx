@@ -1,159 +1,218 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Section } from "@/components/ui/primitives";
-import { Reveal } from "@/components/ui/Reveal";
-import { COMPANY_DATA } from "@/lib/data";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Section, ButtonLink } from "@/components/ui/primitives";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Target, Award } from "lucide-react";
+import { Shield, Target, Award, Download } from "lucide-react";
+
+const TABS = [
+    { id: "overview", label: "Overview" },
+    { id: "history", label: "History" },
+    { id: "leadership", label: "Leadership" },
+] as const;
+
+const VALUES = [
+    {
+        icon: Shield,
+        title: "Safety First",
+        text: "Strict adherence to international safety standards on every site, every day.",
+    },
+    {
+        icon: Target,
+        title: "Precision",
+        text: "Disciplined, laser-focused execution on the most complex engineering tasks.",
+    },
+    {
+        icon: Award,
+        title: "Quality",
+        text: "ISO 9001 certified processes and management across all operations.",
+    },
+];
+
+const TIMELINE = [
+    { year: "1999", text: "Company founded by Mr. Marwan Ahmad Alkurdi in Amman." },
+    { year: "2006", text: "Delivered the Al Wahdah Dam and Dead Sea Panorama complex." },
+    { year: "2009", text: "Completed civil works for the Aqaba Thermal Power Station." },
+    { year: "2013", text: "Played a key role in the landmark Dissi water-conveyance scheme." },
+    { year: "Today", text: "120+ engineers delivering Jordan's most demanding civil works." },
+];
 
 export default function AboutPage() {
-    const [activeTab, setActiveTab] = useState("overview");
-
-    const tabs = [
-        { id: "overview", label: "Overview" },
-        { id: "history", label: "History" },
-        { id: "leadership", label: "Leadership" }
-    ];
+    const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("overview");
 
     return (
-        <main className="bg-background min-h-screen">
+        <>
             <Navbar />
+            <main>
+                <PageHeader
+                    eyebrow="About Us"
+                    title="Building more than structures"
+                    subtitle="A premier engineering and contracting firm shaping Jordan's infrastructure since 1999."
+                    image="/images/hero/2.jpg"
+                />
 
-            <div className="pt-32 pb-16 container mx-auto px-4 md:px-8">
-                <Reveal>
-                    <h1 className="text-5xl md:text-7xl font-heading font-bold text-white mb-6">About Us</h1>
-                </Reveal>
+                <Section>
+                    <div className="grid gap-16 lg:grid-cols-3">
+                        <div className="lg:col-span-2">
+                            {/* Tabs */}
+                            <div className="mb-12 flex gap-8 border-b border-white/10">
+                                {TABS.map((t) => (
+                                    <button
+                                        key={t.id}
+                                        onClick={() => setTab(t.id)}
+                                        className={`relative pb-4 font-heading text-sm font-semibold uppercase tracking-widest transition-colors ${
+                                            tab === t.id
+                                                ? "text-accent"
+                                                : "text-muted-foreground hover:text-foreground"
+                                        }`}
+                                    >
+                                        {t.label}
+                                        {tab === t.id && (
+                                            <motion.span
+                                                layoutId="about-tab"
+                                                className="absolute inset-x-0 -bottom-px h-0.5 bg-accent"
+                                            />
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
 
-                {/* Tabs */}
-                <div className="flex gap-8 border-b border-white/10 mb-12">
-                    {tabs.map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`pb-4 text-sm font-heading font-bold uppercase tracking-widest transition-colors relative ${activeTab === tab.id ? "text-primary" : "text-white/40 hover:text-white"
-                                }`}
-                        >
-                            {tab.label}
-                            {activeTab === tab.id && (
-                                <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
-                            )}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-                    <div className="lg:col-span-2">
-                        <AnimatePresence mode="wait">
-                            {activeTab === "overview" && (
+                            <AnimatePresence mode="wait">
                                 <motion.div
-                                    key="overview"
-                                    initial={{ opacity: 0, y: 10 }}
+                                    key={tab}
+                                    initial={{ opacity: 0, y: 12 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    className="space-y-8"
+                                    exit={{ opacity: 0, y: -12 }}
+                                    transition={{ duration: 0.35 }}
                                 >
-                                    <h2 className="text-3xl font-heading font-bold text-white">Building the future since 1999</h2>
-                                    <p className="text-white/70 text-lg leading-relaxed">
-                                        {COMPANY_DATA.company.name.en} is a premier engineering and contracting firm in Jordan, specializing in complex infrastructure projects.
-                                        With a focus on dams, power stations, and specialized injection works, we have established ourselves as a trusted partner for national-scale developments.
-                                    </p>
-                                    <p className="text-white/70 text-lg leading-relaxed">
-                                        Our commitment to quality, safety, and innovation has earned us the trust of both public and private sectors, resulting in a portfolio that shapes the landscape of the Kingdom.
-                                    </p>
+                                    {tab === "overview" && (
+                                        <div className="space-y-6">
+                                            <h2 className="font-heading text-3xl font-bold uppercase tracking-tight text-foreground">
+                                                Building the future since 1999
+                                            </h2>
+                                            <p className="text-lg leading-relaxed text-muted-foreground">
+                                                Marwan Ahmad Alkurdi &amp; Partners specializes in
+                                                complex infrastructure — dams, power stations and
+                                                specialized injection works — and has become a
+                                                trusted partner for national-scale developments.
+                                            </p>
+                                            <p className="text-lg leading-relaxed text-muted-foreground">
+                                                Our commitment to quality, safety and innovation has
+                                                earned the confidence of both public and private
+                                                sectors, resulting in a portfolio that shapes the
+                                                landscape of the Kingdom.
+                                            </p>
+                                            <div className="grid gap-6 pt-4 sm:grid-cols-3">
+                                                {VALUES.map((v) => (
+                                                    <div
+                                                        key={v.title}
+                                                        className="border border-white/10 bg-surface p-6"
+                                                    >
+                                                        <v.icon
+                                                            className="mb-4 text-accent"
+                                                            size={28}
+                                                        />
+                                                        <h3 className="font-heading font-bold uppercase tracking-wide text-foreground">
+                                                            {v.title}
+                                                        </h3>
+                                                        <p className="mt-2 text-sm text-muted-foreground">
+                                                            {v.text}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="pt-4">
+                                                <a
+                                                    href="/documents/company_profile.pdf"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="group inline-flex items-center gap-3 bg-accent px-7 py-4 font-heading text-sm font-medium uppercase tracking-wider text-accent-foreground transition-colors hover:bg-accent-bright"
+                                                >
+                                                    <Download size={18} />
+                                                    Download Company Profile
+                                                </a>
+                                            </div>
+                                        </div>
+                                    )}
 
-                                    <div className="mt-8">
-                                        <a
-                                            href="/documents/company_profile.pdf"
-                                            target="_blank"
-                                            className="inline-flex items-center gap-2 bg-primary text-background px-6 py-3 rounded font-bold uppercase tracking-widest hover:bg-white transition-colors"
-                                        >
-                                            <Award size={20} />
-                                            Download Company Profile (PDF)
-                                        </a>
-                                    </div>
+                                    {tab === "history" && (
+                                        <div className="border-l border-white/10 pl-8">
+                                            {TIMELINE.map((item, i) => (
+                                                <div key={item.year} className="relative pb-12 last:pb-0">
+                                                    <span
+                                                        className={`absolute -left-[39px] top-1 h-5 w-5 rounded-full border-4 border-background ${
+                                                            i === 0 ? "bg-accent" : "bg-white/20"
+                                                        }`}
+                                                    />
+                                                    <h3 className="font-heading text-xl font-bold text-foreground">
+                                                        {item.year}
+                                                    </h3>
+                                                    <p className="mt-1 text-muted-foreground">
+                                                        {item.text}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                                        <div className="p-6 bg-white/5 border border-white/10 rounded-lg">
-                                            <Shield className="text-primary mb-4" size={32} />
-                                            <h3 className="text-white font-bold mb-2">Safety First</h3>
-                                            <p className="text-white/50 text-sm">Strict adherence to international safety standards.</p>
-                                        </div>
-                                        <div className="p-6 bg-white/5 border border-white/10 rounded-lg">
-                                            <Target className="text-primary mb-4" size={32} />
-                                            <h3 className="text-white font-bold mb-2">Precision</h3>
-                                            <p className="text-white/50 text-sm">Laser-focused execution on complex engineering tasks.</p>
-                                        </div>
-                                        <div className="p-6 bg-white/5 border border-white/10 rounded-lg">
-                                            <Award className="text-primary mb-4" size={32} />
-                                            <h3 className="text-white font-bold mb-2">Quality</h3>
-                                            <p className="text-white/50 text-sm">ISO 9001 Certified processes and management.</p>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-
-                            {activeTab === "history" && (
-                                <motion.div
-                                    key="history"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                >
-                                    <div className="border-l border-white/10 pl-8 space-y-12">
-                                        <div className="relative">
-                                            <span className="absolute -left-[39px] top-0 w-5 h-5 bg-primary rounded-full border-4 border-background" />
-                                            <h3 className="text-white font-heading font-bold text-xl mb-2">2024</h3>
-                                            <p className="text-white/60">Completion of major expansion works at Aqaba.</p>
-                                        </div>
-                                        <div className="relative">
-                                            <span className="absolute -left-[39px] top-0 w-5 h-5 bg-white/20 rounded-full border-4 border-background" />
-                                            <h3 className="text-white font-heading font-bold text-xl mb-2">2010</h3>
-                                            <p className="text-white/60">Awarded the Dissi Pipeline infrastructure contract.</p>
-                                        </div>
-                                        <div className="relative">
-                                            <span className="absolute -left-[39px] top-0 w-5 h-5 bg-white/20 rounded-full border-4 border-background" />
-                                            <h3 className="text-white font-heading font-bold text-xl mb-2">1999</h3>
-                                            <p className="text-white/60">Company established by Mr. Marwan Ahmad Alkurdi.</p>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-
-                            {activeTab === "leadership" && (
-                                <motion.div
-                                    key="leadership"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                >
-                                    <h2 className="text-3xl font-heading font-bold text-white mb-6">Chairman's Message</h2>
-                                    <blockquote className="border-l-4 border-primary pl-6 py-2 italic text-white/80 text-xl leading-relaxed mb-8">
-                                        "Our mission has always been to build more than just structures; we build trust, we build capacity, and we build the future of our nation."
-                                    </blockquote>
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-16 h-16 bg-white/10 rounded-full" />
+                                    {tab === "leadership" && (
                                         <div>
-                                            <div className="text-white font-bold font-heading">Marwan Alkurdi</div>
-                                            <div className="text-primary text-sm uppercase tracking-widest">Chairman & Founder</div>
+                                            <h2 className="mb-6 font-heading text-3xl font-bold uppercase tracking-tight text-foreground">
+                                                Chairman&apos;s Message
+                                            </h2>
+                                            <blockquote className="border-l-4 border-accent pl-6 text-xl italic leading-relaxed text-foreground/85">
+                                                &ldquo;Our mission has always been to build more than
+                                                just structures; we build trust, we build capacity,
+                                                and we build the future of our nation.&rdquo;
+                                            </blockquote>
+                                            <div className="mt-8 flex items-center gap-4">
+                                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/15 font-heading text-xl font-bold text-accent">
+                                                    MK
+                                                </div>
+                                                <div>
+                                                    <div className="font-heading font-bold text-foreground">
+                                                        Marwan Ahmad Alkurdi
+                                                    </div>
+                                                    <div className="text-sm uppercase tracking-widest text-accent">
+                                                        Chairman &amp; Founder
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </motion.div>
-                            )}
-                        </AnimatePresence>
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Sidebar image */}
+                        <div className="relative hidden min-h-[460px] overflow-hidden lg:block">
+                            <Image
+                                src="/images/anniversary.jpg"
+                                alt="Marwan Ahmad Alkurdi & Partners"
+                                fill
+                                sizes="33vw"
+                                className="object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+                            <div className="pointer-events-none absolute bottom-6 left-6 right-6 h-16 border-b-2 border-l-2 border-accent/50" />
+                        </div>
                     </div>
 
-                    {/* Sidebar Image */}
-                    <div className="hidden lg:block h-full min-h-[500px] bg-neutral-800 rounded-lg relative overflow-hidden">
-                        <div className="absolute inset-0 bg-[url('/patterns/mesh.png')] opacity-20" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+                    <div className="mt-20 flex flex-col items-center gap-6 border-t border-white/10 pt-16 text-center">
+                        <h2 className="max-w-2xl font-heading text-3xl font-bold uppercase tracking-tight text-foreground">
+                            Explore the projects behind our reputation
+                        </h2>
+                        <ButtonLink href="/projects" variant="primary">
+                            View Portfolio
+                        </ButtonLink>
                     </div>
-                </div>
-            </div>
-
+                </Section>
+            </main>
             <Footer />
-        </main>
+        </>
     );
 }

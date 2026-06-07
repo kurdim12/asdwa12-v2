@@ -1,80 +1,138 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Reveal } from "@/components/ui/Reveal";
-import { Button } from "@/components/ui/primitives";
-import Link from "next/link";
+import { useRef, useState, useEffect } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowDown } from "lucide-react";
+import { ButtonLink, Eyebrow } from "@/components/ui/primitives";
+
+const SLIDES = ["/images/hero/1.jpg", "/images/hero/2.jpg", "/images/hero/3.jpg"];
 
 export function Hero() {
-    const ref = useRef(null);
+    const ref = useRef<HTMLDivElement>(null);
+    const [index, setIndex] = useState(0);
+
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ["start start", "end start"],
     });
+    const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+    const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
 
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+    useEffect(() => {
+        const id = setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), 6000);
+        return () => clearInterval(id);
+    }, []);
 
     return (
-        <section ref={ref} className="h-screen w-full relative overflow-hidden flex items-center justify-center">
-            {/* Video Background with Parallax */}
-            <motion.div style={{ y, opacity }} className="absolute inset-0 w-full h-full z-0">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover grayscale opacity-60"
-                >
-                    {/* <source src="/hero.mp4" type="video/mp4" /> */}
+        <section
+            ref={ref}
+            className="relative flex h-[100svh] min-h-[640px] w-full items-center overflow-hidden"
+        >
+            {/* Slideshow with parallax */}
+            <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
+                <AnimatePresence>
+                    <motion.div
+                        key={index}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.4, ease: "easeInOut" }}
+                        className="absolute inset-0"
+                    >
+                        <div className="absolute inset-0 animate-ken-burns">
+                            <Image
+                                src={SLIDES[index]}
+                                alt=""
+                                fill
+                                priority={index === 0}
+                                sizes="100vw"
+                                className="object-cover"
+                            />
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
 
-                </video>
-                <div className="absolute inset-0 bg-background/50 mix-blend-multiply" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+                {/* Scrims */}
+                <div className="absolute inset-0 bg-background/55" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/70" />
+                <div className="absolute inset-0 grid-pattern opacity-40" />
             </motion.div>
 
             {/* Content */}
-            <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
-                <Reveal width="100%">
-                    <h2 className="text-primary font-heading tracking-[0.2em] text-sm md:text-base mb-4 uppercase">
-                        Est. 1999 • Amman, Jordan
-                    </h2>
-                </Reveal>
+            <div className="container relative z-10">
+                <div className="max-w-4xl">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                        <Eyebrow>Est. 1999 — Amman, Jordan</Eyebrow>
+                    </motion.div>
 
-                <Reveal width="100%" delay={0.4}>
-                    <h1 className="text-5xl md:text-7xl lg:text-9xl font-heading font-bold text-white mb-6 tracking-tighter uppercase leading-[0.9]">
-                        Building <br /> <span className="text-stroke">Legacy</span>
-                    </h1>
-                </Reveal>
+                    <motion.h1
+                        initial={{ opacity: 0, y: 28 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                        className="mt-6 font-heading text-5xl font-bold uppercase leading-[0.92] tracking-tightest text-foreground sm:text-6xl md:text-8xl"
+                    >
+                        Engineering the
+                        <br />
+                        foundations of
+                        <br />
+                        <span className="text-gold">a nation.</span>
+                    </motion.h1>
 
-                <Reveal width="100%" delay={0.6}>
-                    <p className="text-white/70 max-w-2xl text-lg md:text-xl font-body leading-relaxed mb-8">
-                        Pioneering major infrastructure, dams, and specialized engineering projects across the Kingdom for over 25 years.
-                    </p>
-                </Reveal>
+                    <motion.p
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                        className="mt-8 max-w-xl text-lg leading-relaxed text-foreground/75 md:text-xl"
+                    >
+                        For over 25 years, Marwan Ahmad Alkurdi &amp; Partners has delivered
+                        Jordan&apos;s dams, power stations and national infrastructure — built to
+                        stand the test of time.
+                    </motion.p>
 
-                <Reveal width="100%" delay={0.8}>
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <Link href="/projects">
-                            <Button size="lg" variant="primary">View Portfolio</Button>
-                        </Link>
-                        <Link href="/contact">
-                            <Button size="lg" variant="outline">Contact Us</Button>
-                        </Link>
-                    </div>
-                </Reveal>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.36, ease: [0.16, 1, 0.3, 1] }}
+                        className="mt-10 flex flex-col gap-4 sm:flex-row"
+                    >
+                        <ButtonLink href="/projects" size="lg" variant="primary">
+                            View Our Portfolio
+                        </ButtonLink>
+                        <ButtonLink href="/contact" size="lg" variant="outline">
+                            Get in Touch
+                        </ButtonLink>
+                    </motion.div>
+                </div>
             </div>
 
-            {/* Scroll Indicator */}
+            {/* Slide indicators */}
+            <div className="absolute bottom-10 right-6 z-10 hidden items-center gap-2 md:flex md:right-10">
+                {SLIDES.map((_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => setIndex(i)}
+                        aria-label={`Go to slide ${i + 1}`}
+                        className={`h-1 rounded-full transition-all duration-300 ${
+                            i === index ? "w-8 bg-accent" : "w-4 bg-white/30 hover:bg-white/60"
+                        }`}
+                    />
+                ))}
+            </div>
+
+            {/* Scroll cue */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50 flex flex-col items-center gap-2"
+                className="absolute bottom-10 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/50 md:flex"
             >
-                <span className="text-xs uppercase tracking-widest">Scroll</span>
-                <div className="w-[1px] h-12 bg-gradient-to-b from-white/0 via-white/50 to-white/0" />
+                <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+                <ArrowDown size={16} className="animate-bounce" />
             </motion.div>
         </section>
     );

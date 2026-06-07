@@ -1,59 +1,136 @@
-"use client";
-
+import type { Metadata } from "next";
+import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Section } from "@/components/ui/primitives";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Section, Eyebrow } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
+import { Sectors } from "@/components/home/Sectors";
 import { COMPANY_DATA } from "@/lib/data";
-import { Hammer, Cog } from "lucide-react";
+import { Check } from "lucide-react";
+
+export const metadata: Metadata = {
+    title: "Services",
+    description:
+        "Specialized injection and ground improvement, heavy civil works and a modern equipment fleet — delivered to ISO standards across Jordan.",
+};
+
+const SERVICE_IMAGES = ["/images/hero/3.jpg", "/images/hero/1.jpg"];
+
+const PROCESS = [
+    { step: "01", title: "Consult", text: "We listen, survey the site and define the engineering challenge." },
+    { step: "02", title: "Engineer", text: "Our specialists design the optimal, standards-compliant solution." },
+    { step: "03", title: "Build", text: "Certified crews and modern plant execute with precision and safety." },
+    { step: "04", title: "Deliver", text: "On time, within budget, and built to last for decades." },
+];
 
 export default function ServicesPage() {
     const { mainServices } = COMPANY_DATA.services;
-    const icons = [Hammer, Cog];
 
     return (
-        <main className="bg-background min-h-screen">
+        <>
             <Navbar />
+            <main>
+                <PageHeader
+                    eyebrow="Our Services"
+                    title="Specialized engineering, end to end"
+                    subtitle="From ground improvement to heavy civil works, we deliver the full spectrum of capabilities national-scale projects demand."
+                    image="/images/hero/1.jpg"
+                />
 
-            <div className="pt-32 pb-16 container mx-auto px-4 md:px-8">
-                <Reveal>
-                    <h1 className="text-5xl md:text-7xl font-heading font-bold text-white mb-6">Our Services</h1>
-                </Reveal>
-                <Reveal delay={0.2}>
-                    <p className="text-white/60 text-lg max-w-2xl mb-16">
-                        Delivering specialized engineering and construction solutions across the Kingdom.
-                    </p>
-                </Reveal>
-
-                <div className="grid grid-cols-1 gap-16">
-                    {mainServices.map((service, index) => {
-                        const Icon = icons[index] || Hammer;
-                        return (
-                            <Reveal key={service.id} delay={index * 0.2} width="100%">
-                                <div className="bg-neutral-900 border border-white/10 p-8 md:p-12 rounded-lg flex flex-col md:flex-row gap-8 items-start hover:border-primary/50 transition-colors group">
-                                    <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-background transition-colors duration-300">
-                                        <Icon size={40} />
+                {/* Main services — alternating rows */}
+                <Section>
+                    <div className="space-y-20 md:space-y-28">
+                        {mainServices.map((service, i) => (
+                            <div
+                                key={service.id}
+                                className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
+                            >
+                                <Reveal
+                                    width="100%"
+                                    className={i % 2 === 1 ? "lg:order-2" : ""}
+                                >
+                                    <div className="group relative aspect-[16/11] overflow-hidden">
+                                        <Image
+                                            src={SERVICE_IMAGES[i] ?? SERVICE_IMAGES[0]}
+                                            alt={service.title.en}
+                                            fill
+                                            sizes="(max-width: 1024px) 100vw, 50vw"
+                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-tr from-background/60 to-transparent" />
+                                        <span className="absolute left-6 top-6 font-heading text-6xl font-bold text-white/15">
+                                            0{i + 1}
+                                        </span>
                                     </div>
-                                    <div>
-                                        <h3 className="text-3xl font-heading font-bold text-white mb-4">{service.title.en}</h3>
-                                        <p className="text-white/70 text-lg leading-relaxed mb-6 max-w-3xl">
+                                </Reveal>
+
+                                <div className={i % 2 === 1 ? "lg:order-1" : ""}>
+                                    <Reveal>
+                                        <Eyebrow>Service 0{i + 1}</Eyebrow>
+                                    </Reveal>
+                                    <Reveal delay={0.1}>
+                                        <h2 className="mt-5 font-heading text-3xl font-bold uppercase tracking-tight text-foreground md:text-4xl">
+                                            {service.title.en}
+                                        </h2>
+                                    </Reveal>
+                                    <Reveal delay={0.16}>
+                                        <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
                                             {service.description}
                                         </p>
-                                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-3 text-white/50 text-sm">
-                                            <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 bg-primary rounded-full" /> Specialized Equipment</li>
-                                            <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 bg-primary rounded-full" /> Certified Operators</li>
-                                            <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 bg-primary rounded-full" /> 24/7 Support</li>
-                                            <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 bg-primary rounded-full" /> ISO Standards</li>
+                                    </Reveal>
+                                    <Reveal delay={0.22} width="100%">
+                                        <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                            {service.features.map((feature) => (
+                                                <li
+                                                    key={feature}
+                                                    className="flex items-center gap-2.5 text-foreground/80"
+                                                >
+                                                    <Check size={18} className="shrink-0 text-accent" />
+                                                    {feature}
+                                                </li>
+                                            ))}
                                         </ul>
+                                    </Reveal>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </Section>
+
+                {/* Capabilities grid (shared with home) */}
+                <Sectors />
+
+                {/* Process */}
+                <Section>
+                    <div className="mb-16 max-w-2xl">
+                        <Reveal>
+                            <Eyebrow>How We Work</Eyebrow>
+                        </Reveal>
+                        <Reveal delay={0.1}>
+                            <h2 className="mt-6 font-heading text-4xl font-bold uppercase tracking-tight text-foreground md:text-5xl">
+                                A disciplined delivery process
+                            </h2>
+                        </Reveal>
+                    </div>
+                    <div className="grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+                        {PROCESS.map((p, i) => (
+                            <Reveal key={p.step} delay={i * 0.08} width="100%">
+                                <div className="h-full bg-surface p-8">
+                                    <div className="font-heading text-5xl font-bold text-gold">
+                                        {p.step}
                                     </div>
+                                    <h3 className="mt-4 font-heading text-xl font-bold uppercase tracking-wide text-foreground">
+                                        {p.title}
+                                    </h3>
+                                    <p className="mt-2 text-sm text-muted-foreground">{p.text}</p>
                                 </div>
                             </Reveal>
-                        )
-                    })}
-                </div>
-            </div>
-
+                        ))}
+                    </div>
+                </Section>
+            </main>
             <Footer />
-        </main>
+        </>
     );
 }
