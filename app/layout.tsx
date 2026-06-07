@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Inter, Oswald } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-sans",
   display: "swap",
 });
-const oswald = Oswald({
+const display = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-oswald",
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -46,8 +46,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${oswald.variable}`}>
-      <body className="bg-background font-body text-foreground antialiased overflow-x-hidden">
+    <html lang="en" className={`${inter.variable} ${display.variable}`}>
+      <body className="bg-background font-sans text-foreground antialiased">
         {children}
       </body>
     </html>

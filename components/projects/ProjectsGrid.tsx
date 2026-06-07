@@ -37,20 +37,20 @@ export function ProjectsGrid({
     const filtered =
         filter === "all" ? projects : projects.filter((p) => p.categoryId === filter);
 
-    const filters = [{ id: "all", name: "All Projects" }, ...categories];
+    const filters = [{ id: "all", name: "All projects" }, ...categories];
 
     return (
         <>
             {/* Filters */}
-            <div className="mb-14 flex flex-wrap gap-3 border-b border-white/10 pb-8">
+            <div className="mb-12 flex flex-wrap gap-2.5">
                 {filters.map((f) => (
                     <button
                         key={f.id}
                         onClick={() => setFilter(f.id)}
-                        className={`rounded-full px-5 py-2.5 font-heading text-xs font-semibold uppercase tracking-widest transition-all ${
+                        className={`rounded-lg px-4 py-2 text-sm font-medium transition-all ${
                             filter === f.id
-                                ? "bg-accent text-accent-foreground"
-                                : "bg-white/5 text-foreground/70 hover:bg-white/10 hover:text-foreground"
+                                ? "bg-brand text-white shadow-soft"
+                                : "border border-line bg-white text-foreground/70 hover:border-brand/40 hover:text-foreground"
                         }`}
                     >
                         {f.name}
@@ -59,23 +59,20 @@ export function ProjectsGrid({
             </div>
 
             {/* Grid */}
-            <motion.div
-                layout
-                className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            >
+            <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 <AnimatePresence mode="popLayout">
                     {filtered.map((project) => (
                         <motion.div
                             layout
                             key={project.slug}
-                            initial={{ opacity: 0, scale: 0.95 }}
+                            initial={{ opacity: 0, scale: 0.96 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
+                            exit={{ opacity: 0, scale: 0.96 }}
                             transition={{ duration: 0.3 }}
                         >
                             <Link
                                 href={`/projects/${project.slug}`}
-                                className="group flex h-full flex-col overflow-hidden border border-white/10 bg-surface transition-colors hover:border-accent/40"
+                                className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-card"
                             >
                                 <div className="relative aspect-[4/3] overflow-hidden">
                                     <Image
@@ -83,21 +80,20 @@ export function ProjectsGrid({
                                         alt={project.name}
                                         fill
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                        className="object-cover grayscale transition-all duration-700 group-hover:scale-110 group-hover:grayscale-0"
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/10 to-transparent" />
-                                    <span className="absolute right-4 top-4 flex h-10 w-10 translate-y-2 items-center justify-center bg-accent text-accent-foreground opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                                        <ArrowUpRight size={18} />
+                                    <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-lg bg-white/90 text-brand opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
+                                        <ArrowUpRight size={17} />
                                     </span>
                                 </div>
                                 <div className="flex flex-1 flex-col p-6">
-                                    <span className="font-heading text-xs uppercase tracking-[0.2em] text-accent">
+                                    <span className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">
                                         {project.categoryName}
                                     </span>
-                                    <h3 className="mt-2 font-heading text-xl font-bold uppercase tracking-wide text-foreground transition-colors group-hover:text-accent">
+                                    <h3 className="mt-2 font-display text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-brand">
                                         {project.name}
                                     </h3>
-                                    <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
+                                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                                         {project.description}
                                     </p>
                                 </div>
@@ -108,7 +104,7 @@ export function ProjectsGrid({
             </motion.div>
 
             {filtered.length === 0 && (
-                <p className="py-20 text-center font-heading uppercase tracking-widest text-muted-foreground">
+                <p className="py-20 text-center text-muted-foreground">
                     No projects in this category yet.
                 </p>
             )}

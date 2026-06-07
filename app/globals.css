@@ -3,18 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* Exposed as CSS variables so inline styles / motion can use brand colors */
-  --background: #0a0a0b;
-  --foreground: #ededed;
-  --accent: #c9a24b;
-  --accent-bright: #e4c77b;
+  --background: #ffffff;
+  --foreground: #0e1116;
+  --brand: #2b5a8c;
+  --navy: #0f2742;
 }
 
 @layer base {
-  * {
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -28,33 +23,31 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Accessible focus ring */
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--brand);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
   ::selection {
-    background: var(--accent);
-    color: #0a0a0b;
+    background: var(--brand);
+    color: #ffffff;
   }
 
-  /* Refined dark scrollbar */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
   }
   ::-webkit-scrollbar-track {
-    background: #0a0a0b;
+    background: #f6f7f9;
   }
   ::-webkit-scrollbar-thumb {
-    background: #2a2a30;
+    background: #d4d7dd;
     border-radius: 999px;
-    border: 2px solid #0a0a0b;
+    border: 3px solid #f6f7f9;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #3a3a42;
+    background: #b9bdc6;
   }
 }
 
@@ -74,48 +67,24 @@
     scrollbar-width: none;
   }
 
-  /* Outlined display text */
-  .text-stroke {
-    -webkit-text-stroke: 1.5px currentColor;
-    color: transparent;
-  }
-
-  /* Metallic gold gradient text */
-  .text-gold {
-    background: linear-gradient(180deg, #f0d690 0%, #c9a24b 55%, #9a7a32 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  /* Blueprint grid overlay (no external asset needed) */
-  .grid-pattern {
+  /* Faint blueprint grid for hero/section backgrounds */
+  .grid-faint {
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(rgba(15, 39, 66, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 39, 66, 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
 
-  /* Fades content out toward the edges (for marquees) */
+  /* Edge fade for marquees */
   .mask-x {
     -webkit-mask-image: linear-gradient(
       to right,
       transparent,
-      black 8%,
-      black 92%,
+      black 6%,
+      black 94%,
       transparent
     );
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 8%,
-      black 92%,
-      transparent
-    );
-  }
-
-  .pause-marquee:hover * {
-    animation-play-state: paused;
+    mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
   }
 }
 

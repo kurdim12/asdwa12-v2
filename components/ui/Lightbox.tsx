@@ -100,8 +100,8 @@ export function Lightbox({ images, index, onClose, onIndexChange, label }: Light
                         />
                     </motion.div>
 
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-heading text-sm tracking-widest text-white/50">
-                        <span className="text-accent">{String(index + 1).padStart(2, "0")}</span>
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-display text-sm tracking-widest text-white/50">
+                        <span className="text-white">{String(index + 1).padStart(2, "0")}</span>
                         {" / "}
                         {String(images.length).padStart(2, "0")}
                     </div>

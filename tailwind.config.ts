@@ -14,65 +14,69 @@ const config: Config = {
                 lg: "2.5rem",
             },
             screens: {
-                "2xl": "1280px",
+                "2xl": "1240px",
             },
         },
         extend: {
             colors: {
-                // Base surfaces (deep, layered charcoal)
-                background: "#0A0A0B",
-                surface: "#101012",
-                "surface-2": "#16161A",
-                line: "rgba(255,255,255,0.08)",
+                // Light, airy base
+                background: "#FFFFFF",
+                paper: "#F6F7F9", // alternating light sections
+                foreground: "#0E1116", // ink
+                line: "#E6E8EC", // hairline borders
 
-                foreground: "#EDEDED",
                 muted: {
-                    DEFAULT: "#1C1C20",
-                    foreground: "#9A9AA3",
+                    DEFAULT: "#F6F7F9",
+                    foreground: "#5B616E", // secondary text
                 },
 
-                // Brushed-brass gold — the brand accent
+                // Brand steel-blue, sampled from the logo
+                brand: {
+                    DEFAULT: "#2B5A8C",
+                    600: "#244E7A",
+                    700: "#1E4068",
+                    foreground: "#FFFFFF",
+                },
+                // Deep navy for the footer / grounding surfaces
+                navy: {
+                    DEFAULT: "#0F2742",
+                    800: "#13294B",
+                },
+                // Alias so existing accent-* utilities map to the brand
                 accent: {
-                    DEFAULT: "#C9A24B",
-                    bright: "#E4C77B",
-                    foreground: "#0A0A0B",
+                    DEFAULT: "#2B5A8C",
+                    foreground: "#FFFFFF",
                 },
-
-                // Cool "blueprint" tone for technical accents
-                blueprint: "#5E7C9B",
             },
             fontFamily: {
-                heading: ["var(--font-oswald)", "ui-sans-serif", "sans-serif"],
-                body: ["var(--font-inter)", "ui-sans-serif", "sans-serif"],
+                display: ["var(--font-display)", "ui-sans-serif", "sans-serif"],
+                sans: ["var(--font-sans)", "ui-sans-serif", "sans-serif"],
             },
             letterSpacing: {
-                tightest: "-0.04em",
+                tight: "-0.015em",
+                tighter: "-0.025em",
+            },
+            borderRadius: {
+                "4xl": "2rem",
             },
             boxShadow: {
-                glow: "0 0 60px -15px rgba(201,162,75,0.35)",
-                "card": "0 20px 50px -20px rgba(0,0,0,0.7)",
+                soft: "0 1px 2px rgba(16,17,22,0.04), 0 1px 3px rgba(16,17,22,0.06)",
+                card: "0 12px 32px -16px rgba(16,17,22,0.18)",
+                lift: "0 20px 50px -24px rgba(16,17,22,0.28)",
             },
             keyframes: {
                 "fade-up": {
-                    from: { opacity: "0", transform: "translateY(20px)" },
+                    from: { opacity: "0", transform: "translateY(16px)" },
                     to: { opacity: "1", transform: "translateY(0)" },
                 },
                 marquee: {
                     from: { transform: "translateX(0)" },
                     to: { transform: "translateX(-50%)" },
                 },
-                "ken-burns": {
-                    "0%": { transform: "scale(1) translate(0,0)" },
-                    "100%": { transform: "scale(1.12) translate(-1.5%, -1.5%)" },
-                },
-                shimmer: {
-                    "100%": { transform: "translateX(100%)" },
-                },
             },
             animation: {
-                "fade-up": "fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both",
-                marquee: "marquee 40s linear infinite",
-                "ken-burns": "ken-burns 12s ease-out forwards",
+                "fade-up": "fade-up 0.6s cubic-bezier(0.16,1,0.3,1) both",
+                marquee: "marquee 45s linear infinite",
             },
         },
     },

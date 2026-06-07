@@ -29,7 +29,7 @@ export default function ReferencesPage() {
                     {certificates.length > 0 ? (
                         <ReferencesGallery certificates={certificates} />
                     ) : (
-                        <div className="rounded-lg border border-dashed border-white/10 bg-white/5 p-16 text-center font-heading uppercase tracking-widest text-muted-foreground">
+                        <div className="rounded-2xl border border-dashed border-line bg-paper p-16 text-center text-muted-foreground">
                             No certificates found.
                         </div>
                     )}

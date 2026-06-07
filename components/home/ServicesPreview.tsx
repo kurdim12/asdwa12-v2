@@ -10,53 +10,50 @@ export function ServicesPreview() {
 
     return (
         <Section>
-            <div className="mb-16 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
                 <div className="max-w-2xl">
                     <Reveal>
-                        <Eyebrow>Our Expertise</Eyebrow>
+                        <Eyebrow>Our expertise</Eyebrow>
                     </Reveal>
-                    <Reveal delay={0.1}>
-                        <h2 className="mt-6 font-heading text-4xl font-bold uppercase leading-tight tracking-tight text-foreground md:text-5xl">
+                    <Reveal delay={0.08}>
+                        <h2 className="mt-5 font-display text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl">
                             Specialized engineering services
                         </h2>
                     </Reveal>
                 </div>
-                <Reveal delay={0.15}>
+                <Reveal delay={0.12}>
                     <ButtonLink href="/services" variant="outline">
-                        All Services
+                        All services
                     </ButtonLink>
                 </Reveal>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2">
                 {mainServices.map((service, i) => {
                     const Icon = ICONS[i] ?? Hammer;
                     return (
-                        <Reveal key={service.id} delay={i * 0.12} width="100%">
-                            <div className="group relative h-full overflow-hidden border border-white/10 bg-surface p-8 transition-colors hover:border-accent/40 md:p-12">
-                                <div className="absolute inset-0 -translate-y-full bg-gradient-to-b from-accent/10 to-transparent opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100" />
-                                <div className="relative">
-                                    <div className="mb-8 inline-flex h-16 w-16 items-center justify-center rounded-xl border border-white/10 bg-background text-accent transition-colors duration-300 group-hover:border-accent group-hover:bg-accent group-hover:text-accent-foreground">
-                                        <Icon size={30} />
-                                    </div>
-                                    <h3 className="font-heading text-2xl font-bold uppercase tracking-wide text-foreground">
-                                        {service.title.en}
-                                    </h3>
-                                    <p className="mt-4 leading-relaxed text-muted-foreground">
-                                        {service.description}
-                                    </p>
-                                    <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                                        {service.features.map((feature) => (
-                                            <li
-                                                key={feature}
-                                                className="flex items-center gap-2.5 text-sm text-foreground/80"
-                                            >
-                                                <Check size={16} className="shrink-0 text-accent" />
-                                                {feature}
-                                            </li>
-                                        ))}
-                                    </ul>
+                        <Reveal key={service.id} delay={i * 0.1} width="100%">
+                            <div className="group h-full rounded-2xl border border-line bg-white p-8 transition-all duration-300 hover:shadow-card md:p-10">
+                                <div className="mb-7 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-brand/8 text-brand transition-colors duration-300 group-hover:bg-brand group-hover:text-white">
+                                    <Icon size={28} />
                                 </div>
+                                <h3 className="font-display text-2xl font-semibold tracking-tight text-foreground">
+                                    {service.title.en}
+                                </h3>
+                                <p className="mt-3 leading-relaxed text-muted-foreground">
+                                    {service.description}
+                                </p>
+                                <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    {service.features.map((feature) => (
+                                        <li
+                                            key={feature}
+                                            className="flex items-center gap-2.5 text-sm text-foreground/80"
+                                        >
+                                            <Check size={16} className="shrink-0 text-brand" />
+                                            {feature}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
                         </Reveal>
                     );

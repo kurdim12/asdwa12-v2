@@ -1,93 +1,45 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { motion } from "framer-motion";
 import { ButtonLink, Eyebrow } from "@/components/ui/primitives";
+import { COMPANY_DATA } from "@/lib/data";
 
-const SLIDES = ["/images/hero/1.jpg", "/images/hero/2.jpg", "/images/hero/3.jpg"];
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export function Hero() {
-    const ref = useRef<HTMLDivElement>(null);
-    const [index, setIndex] = useState(0);
-
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start start", "end start"],
-    });
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-    const opacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
-
-    useEffect(() => {
-        const id = setInterval(() => setIndex((i) => (i + 1) % SLIDES.length), 6000);
-        return () => clearInterval(id);
-    }, []);
+    const stats = COMPANY_DATA.stats.slice(0, 3);
 
     return (
-        <section
-            ref={ref}
-            className="relative flex h-[100svh] min-h-[640px] w-full items-center overflow-hidden"
-        >
-            {/* Slideshow with parallax */}
-            <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
-                <AnimatePresence>
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1.4, ease: "easeInOut" }}
-                        className="absolute inset-0"
-                    >
-                        <div className="absolute inset-0 animate-ken-burns">
-                            <Image
-                                src={SLIDES[index]}
-                                alt=""
-                                fill
-                                priority={index === 0}
-                                sizes="100vw"
-                                className="object-cover"
-                            />
-                        </div>
-                    </motion.div>
-                </AnimatePresence>
+        <section className="relative overflow-hidden bg-background">
+            <div className="absolute inset-0 grid-faint" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line to-transparent" />
 
-                {/* Scrims */}
-                <div className="absolute inset-0 bg-background/55" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/70" />
-                <div className="absolute inset-0 grid-pattern opacity-40" />
-            </motion.div>
-
-            {/* Content */}
-            <div className="container relative z-10">
-                <div className="max-w-4xl">
+            <div className="container relative grid items-center gap-12 pb-16 pt-28 md:pb-24 md:pt-40 lg:grid-cols-2 lg:gap-16">
+                {/* Copy */}
+                <div>
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 14 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.5, ease }}
                     >
                         <Eyebrow>Est. 1999 — Amman, Jordan</Eyebrow>
                     </motion.div>
 
                     <motion.h1
-                        initial={{ opacity: 0, y: 28 }}
+                        initial={{ opacity: 0, y: 18 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-                        className="mt-6 font-heading text-5xl font-bold uppercase leading-[0.92] tracking-tightest text-foreground sm:text-6xl md:text-8xl"
+                        transition={{ duration: 0.6, delay: 0.08, ease }}
+                        className="mt-6 font-display text-5xl font-semibold leading-[1.02] tracking-tighter text-foreground md:text-6xl lg:text-7xl"
                     >
-                        Engineering the
-                        <br />
-                        foundations of
-                        <br />
-                        <span className="text-gold">a nation.</span>
+                        Engineering the foundations of a nation.
                     </motion.h1>
 
                     <motion.p
-                        initial={{ opacity: 0, y: 24 }}
+                        initial={{ opacity: 0, y: 18 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
-                        className="mt-8 max-w-xl text-lg leading-relaxed text-foreground/75 md:text-xl"
+                        transition={{ duration: 0.6, delay: 0.16, ease }}
+                        className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground"
                     >
                         For over 25 years, Marwan Ahmad Alkurdi &amp; Partners has delivered
                         Jordan&apos;s dams, power stations and national infrastructure — built to
@@ -95,45 +47,72 @@ export function Hero() {
                     </motion.p>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 18 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.36, ease: [0.16, 1, 0.3, 1] }}
-                        className="mt-10 flex flex-col gap-4 sm:flex-row"
+                        transition={{ duration: 0.6, delay: 0.24, ease }}
+                        className="mt-9 flex flex-col gap-3 sm:flex-row"
                     >
                         <ButtonLink href="/projects" size="lg" variant="primary">
-                            View Our Portfolio
+                            View our portfolio
                         </ButtonLink>
                         <ButtonLink href="/contact" size="lg" variant="outline">
-                            Get in Touch
+                            Get in touch
                         </ButtonLink>
                     </motion.div>
+
+                    {/* Inline credibility stats */}
+                    <motion.dl
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.32, ease }}
+                        className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-line pt-8"
+                    >
+                        {stats.map((s) => (
+                            <div key={s.label}>
+                                <dt className="font-display text-3xl font-semibold tracking-tight text-foreground">
+                                    {s.value}
+                                    <span className="text-brand">{s.suffix}</span>
+                                </dt>
+                                <dd className="mt-1 text-xs leading-snug text-muted-foreground">
+                                    {s.label}
+                                </dd>
+                            </div>
+                        ))}
+                    </motion.dl>
                 </div>
-            </div>
 
-            {/* Slide indicators */}
-            <div className="absolute bottom-10 right-6 z-10 hidden items-center gap-2 md:flex md:right-10">
-                {SLIDES.map((_, i) => (
-                    <button
-                        key={i}
-                        onClick={() => setIndex(i)}
-                        aria-label={`Go to slide ${i + 1}`}
-                        className={`h-1 rounded-full transition-all duration-300 ${
-                            i === index ? "w-8 bg-accent" : "w-4 bg-white/30 hover:bg-white/60"
-                        }`}
-                    />
-                ))}
-            </div>
+                {/* Image */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.1, ease }}
+                    className="relative"
+                >
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-lift">
+                        <Image
+                            src="/images/hero/1.jpg"
+                            alt="Major infrastructure project in Jordan"
+                            fill
+                            priority
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                            className="object-cover"
+                        />
+                    </div>
 
-            {/* Scroll cue */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1, duration: 1 }}
-                className="absolute bottom-10 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/50 md:flex"
-            >
-                <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
-                <ArrowDown size={16} className="animate-bounce" />
-            </motion.div>
+                    {/* Floating caption card */}
+                    <div className="absolute -bottom-5 -left-5 hidden max-w-[15rem] rounded-xl border border-line bg-white p-5 shadow-card sm:block">
+                        <div className="text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+                            Featured
+                        </div>
+                        <div className="mt-1 font-display text-lg font-semibold tracking-tight text-foreground">
+                            Dissi Water Conveyor
+                        </div>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            325 km of national water infrastructure.
+                        </p>
+                    </div>
+                </motion.div>
+            </div>
         </section>
     );
 }

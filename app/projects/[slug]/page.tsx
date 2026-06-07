@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Section, Eyebrow } from "@/components/ui/primitives";
+import { Section, Eyebrow, Container } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProjectGallery } from "@/components/projects/ProjectGallery";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
@@ -36,7 +36,6 @@ export default async function ProjectDetail({ params }: PageProps) {
 
     if (!project) notFound();
 
-    // Prev / next for in-portfolio navigation.
     const all = getAllProjects();
     const idx = all.findIndex((p) => p.slug === project.slug);
     const prev = all[(idx - 1 + all.length) % all.length];
@@ -59,49 +58,72 @@ export default async function ProjectDetail({ params }: PageProps) {
         <>
             <Navbar />
             <main>
-                {/* Hero banner */}
-                <section className="relative h-[70vh] min-h-[480px] overflow-hidden">
-                    <Image
-                        src={project.cover}
-                        alt={project.name}
-                        fill
-                        priority
-                        sizes="100vw"
-                        className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/30" />
-                    <div className="container relative z-10 flex h-full flex-col justify-end pb-14">
+                {/* Title block */}
+                <section className="border-b border-line bg-white pb-10 pt-28 md:pt-36">
+                    <Container>
                         <Link
                             href="/projects"
-                            className="mb-6 inline-flex w-fit items-center gap-2 text-sm text-foreground/70 transition-colors hover:text-foreground"
+                            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
                         >
-                            <ArrowLeft size={18} /> Back to Projects
+                            <ArrowLeft size={17} /> Back to projects
                         </Link>
-                        <Reveal>
-                            <Eyebrow>{project.categoryName}</Eyebrow>
-                        </Reveal>
-                        <Reveal delay={0.1}>
-                            <h1 className="mt-5 max-w-4xl font-heading text-5xl font-bold uppercase leading-[0.95] tracking-tightest text-foreground md:text-7xl">
-                                {project.name}
-                            </h1>
-                        </Reveal>
-                    </div>
+                        <div className="mt-6">
+                            <Reveal>
+                                <Eyebrow>{project.categoryName}</Eyebrow>
+                            </Reveal>
+                            <Reveal delay={0.08}>
+                                <h1 className="mt-5 max-w-4xl font-display text-5xl font-semibold leading-[1.03] tracking-tighter text-foreground md:text-6xl">
+                                    {project.name}
+                                </h1>
+                            </Reveal>
+                            <Reveal delay={0.14}>
+                                <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                                    {project.location && (
+                                        <span className="inline-flex items-center gap-2">
+                                            <MapPin size={15} className="text-brand" />
+                                            {project.location}
+                                        </span>
+                                    )}
+                                    {project.year && (
+                                        <span className="inline-flex items-center gap-2">
+                                            <Calendar size={15} className="text-brand" />
+                                            {project.year}
+                                        </span>
+                                    )}
+                                </div>
+                            </Reveal>
+                        </div>
+                    </Container>
                 </section>
+
+                {/* Cover */}
+                <Container className="mt-10">
+                    <div className="relative aspect-[16/9] overflow-hidden rounded-2xl shadow-card md:aspect-[2/1]">
+                        <Image
+                            src={project.cover}
+                            alt={project.name}
+                            fill
+                            priority
+                            sizes="100vw"
+                            className="object-cover"
+                        />
+                    </div>
+                </Container>
 
                 <Section>
                     <div className="grid gap-14 lg:grid-cols-3">
                         {/* Sidebar */}
                         <aside className="lg:col-span-1">
-                            <div className="border border-white/10 bg-surface p-8">
-                                <h2 className="border-b border-white/10 pb-4 font-heading text-lg font-bold uppercase tracking-wide text-foreground">
-                                    Project Details
+                            <div className="rounded-2xl border border-line bg-paper p-8">
+                                <h2 className="border-b border-line pb-4 font-display text-lg font-semibold tracking-tight text-foreground">
+                                    Project details
                                 </h2>
                                 <dl className="mt-6 space-y-5">
                                     {details.map((d) => (
                                         <div key={d.label} className="flex items-start gap-3">
-                                            <d.icon className="mt-0.5 shrink-0 text-accent" size={18} />
+                                            <d.icon className="mt-0.5 shrink-0 text-brand" size={18} />
                                             <div>
-                                                <dt className="text-xs uppercase tracking-widest text-muted-foreground">
+                                                <dt className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
                                                     {d.label}
                                                 </dt>
                                                 <dd className="mt-0.5 text-foreground">{d.value}</dd>
@@ -115,11 +137,11 @@ export default async function ProjectDetail({ params }: PageProps) {
                         {/* Main */}
                         <div className="lg:col-span-2">
                             <Reveal>
-                                <h2 className="font-heading text-3xl font-bold uppercase tracking-tight text-foreground">
-                                    About the Project
+                                <h2 className="font-display text-3xl font-semibold tracking-tight text-foreground">
+                                    About the project
                                 </h2>
                             </Reveal>
-                            <Reveal delay={0.1}>
+                            <Reveal delay={0.08}>
                                 <div className="mt-6 space-y-5 text-lg leading-relaxed text-muted-foreground">
                                     <p>{project.description}</p>
                                     <p>
@@ -138,8 +160,8 @@ export default async function ProjectDetail({ params }: PageProps) {
                     {/* Gallery */}
                     <div className="mt-20">
                         <Reveal>
-                            <h2 className="mb-8 font-heading text-2xl font-bold uppercase tracking-tight text-foreground">
-                                Project Gallery
+                            <h2 className="mb-8 font-display text-2xl font-semibold tracking-tight text-foreground">
+                                Project gallery
                             </h2>
                         </Reveal>
                         <ProjectGallery images={project.images} name={project.name} />
@@ -147,21 +169,21 @@ export default async function ProjectDetail({ params }: PageProps) {
                 </Section>
 
                 {/* Prev / next */}
-                <section className="border-t border-white/10">
+                <section className="border-t border-line bg-paper">
                     <div className="container grid sm:grid-cols-2">
                         <Link
                             href={`/projects/${prev.slug}`}
-                            className="group flex items-center gap-4 border-b border-white/10 py-10 sm:border-b-0 sm:border-r"
+                            className="group flex items-center gap-4 border-b border-line py-10 sm:border-b-0 sm:border-r"
                         >
                             <ArrowLeft
-                                size={22}
-                                className="shrink-0 text-accent transition-transform duration-300 group-hover:-translate-x-1"
+                                size={20}
+                                className="shrink-0 text-brand transition-transform duration-200 group-hover:-translate-x-1"
                             />
                             <div>
-                                <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                                <div className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
                                     Previous
                                 </div>
-                                <div className="font-heading text-lg font-bold uppercase tracking-wide text-foreground group-hover:text-accent">
+                                <div className="font-display text-lg font-semibold tracking-tight text-foreground group-hover:text-brand">
                                     {prev.name}
                                 </div>
                             </div>
@@ -171,16 +193,16 @@ export default async function ProjectDetail({ params }: PageProps) {
                             className="group flex items-center justify-end gap-4 py-10 text-right"
                         >
                             <div>
-                                <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                                <div className="text-xs uppercase tracking-[0.12em] text-muted-foreground">
                                     Next
                                 </div>
-                                <div className="font-heading text-lg font-bold uppercase tracking-wide text-foreground group-hover:text-accent">
+                                <div className="font-display text-lg font-semibold tracking-tight text-foreground group-hover:text-brand">
                                     {next.name}
                                 </div>
                             </div>
                             <ArrowRight
-                                size={22}
-                                className="shrink-0 text-accent transition-transform duration-300 group-hover:translate-x-1"
+                                size={20}
+                                className="shrink-0 text-brand transition-transform duration-200 group-hover:translate-x-1"
                             />
                         </Link>
                     </div>

@@ -66,26 +66,26 @@ export default function NewsPage() {
                 <Section>
                     {/* Featured */}
                     <Reveal width="100%">
-                        <article className="group grid overflow-hidden border border-white/10 bg-surface lg:grid-cols-2">
+                        <article className="group grid overflow-hidden rounded-2xl border border-line bg-white shadow-soft transition-shadow hover:shadow-card lg:grid-cols-2">
                             <div className="relative aspect-[16/10] overflow-hidden lg:aspect-auto">
                                 <Image
                                     src={featured.image}
                                     alt={featured.title}
                                     fill
                                     sizes="(max-width: 1024px) 100vw, 50vw"
-                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                             </div>
                             <div className="flex flex-col justify-center p-8 md:p-12">
                                 <div className="flex items-center gap-4">
-                                    <span className="bg-accent px-3 py-1 font-heading text-xs font-bold uppercase tracking-widest text-accent-foreground">
+                                    <span className="rounded-md bg-brand/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-brand">
                                         {featured.category}
                                     </span>
                                     <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
                                         <Calendar size={14} /> {featured.date}
                                     </span>
                                 </div>
-                                <h2 className="mt-5 font-heading text-3xl font-bold uppercase leading-tight tracking-tight text-foreground md:text-4xl">
+                                <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight text-foreground md:text-4xl">
                                     {featured.title}
                                 </h2>
                                 <p className="mt-4 leading-relaxed text-muted-foreground">
@@ -96,19 +96,19 @@ export default function NewsPage() {
                     </Reveal>
 
                     {/* Grid */}
-                    <div className="mt-8 grid gap-8 md:grid-cols-3">
+                    <div className="mt-8 grid gap-6 md:grid-cols-3">
                         {rest.map((item, i) => (
-                            <Reveal key={item.id} delay={i * 0.1} width="100%">
-                                <article className="group flex h-full flex-col overflow-hidden border border-white/10 bg-surface transition-colors hover:border-accent/40">
+                            <Reveal key={item.id} delay={i * 0.08} width="100%">
+                                <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-card">
                                     <div className="relative aspect-[16/10] overflow-hidden">
                                         <Image
                                             src={item.image}
                                             alt={item.title}
                                             fill
                                             sizes="(max-width: 768px) 100vw, 33vw"
-                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
                                         />
-                                        <span className="absolute left-4 top-4 bg-accent px-3 py-1 font-heading text-xs font-bold uppercase tracking-widest text-accent-foreground">
+                                        <span className="absolute left-4 top-4 rounded-md bg-white/90 px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-brand shadow-soft backdrop-blur">
                                             {item.category}
                                         </span>
                                     </div>
@@ -116,7 +116,7 @@ export default function NewsPage() {
                                         <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
                                             <Calendar size={14} /> {item.date}
                                         </span>
-                                        <h3 className="mt-3 font-heading text-xl font-bold uppercase leading-tight tracking-wide text-foreground transition-colors group-hover:text-accent">
+                                        <h3 className="mt-3 font-display text-xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover:text-brand">
                                             {item.title}
                                         </h3>
                                         <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted-foreground">

@@ -28,7 +28,7 @@ export default function ContactPage() {
         { icon: Mail, label: "Email", value: contact.email, href: `mailto:${contact.email}` },
         {
             icon: Clock,
-            label: "Working Hours",
+            label: "Working hours",
             value: "Sunday – Thursday, 8:00 AM – 5:00 PM",
             note: "Friday – Saturday: Closed",
         },
@@ -39,7 +39,7 @@ export default function ContactPage() {
             <Navbar />
             <main>
                 <PageHeader
-                    eyebrow="Contact Us"
+                    eyebrow="Contact us"
                     title="Let's discuss your project"
                     subtitle="Interested in partnering with us? Reach out and our engineers will be in touch."
                 />
@@ -49,17 +49,17 @@ export default function ContactPage() {
                         <div className="space-y-8">
                             {items.map((item) => (
                                 <div key={item.label} className="flex items-start gap-5">
-                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/10 bg-surface text-accent">
+                                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand/8 text-brand">
                                         <item.icon size={22} />
                                     </div>
                                     <div>
-                                        <h3 className="font-heading font-bold uppercase tracking-wide text-foreground">
+                                        <h3 className="font-display font-semibold tracking-tight text-foreground">
                                             {item.label}
                                         </h3>
                                         {item.href ? (
                                             <a
                                                 href={item.href}
-                                                className="mt-1 block text-muted-foreground transition-colors hover:text-foreground"
+                                                className="mt-1 block text-muted-foreground transition-colors hover:text-brand"
                                             >
                                                 {item.value}
                                             </a>
@@ -76,11 +76,11 @@ export default function ContactPage() {
                             ))}
 
                             {/* Map */}
-                            <div className="overflow-hidden border border-white/10">
+                            <div className="overflow-hidden rounded-xl border border-line">
                                 <iframe
                                     src={contact.mapEmbed}
                                     title="Office location map"
-                                    className="h-72 w-full grayscale"
+                                    className="h-72 w-full"
                                     loading="lazy"
                                     referrerPolicy="no-referrer-when-downgrade"
                                 />
@@ -88,9 +88,9 @@ export default function ContactPage() {
                         </div>
 
                         {/* Form */}
-                        <div className="border border-white/10 bg-surface p-8 md:p-10">
-                            <h2 className="mb-6 font-heading text-2xl font-bold uppercase tracking-tight text-foreground">
-                                Send a Message
+                        <div className="rounded-2xl border border-line bg-white p-8 shadow-soft md:p-10">
+                            <h2 className="mb-6 font-display text-2xl font-semibold tracking-tight text-foreground">
+                                Send a message
                             </h2>
                             <ContactForm />
                         </div>

@@ -24,34 +24,33 @@ export function Sectors() {
     const { sectors } = COMPANY_DATA;
 
     return (
-        <Section className="border-t border-white/10 bg-surface/40">
-            <div className="mb-16 max-w-2xl">
+        <Section className="bg-paper">
+            <div className="mb-14 max-w-2xl">
                 <Reveal>
-                    <Eyebrow>What We Build</Eyebrow>
+                    <Eyebrow>What we build</Eyebrow>
                 </Reveal>
-                <Reveal delay={0.1}>
-                    <h2 className="mt-6 font-heading text-4xl font-bold uppercase leading-tight tracking-tight text-foreground md:text-5xl">
+                <Reveal delay={0.08}>
+                    <h2 className="mt-5 font-display text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl">
                         Capabilities across every kind of heavy civil work
                     </h2>
                 </Reveal>
             </div>
 
-            <div className="grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {sectors.map((sector, i) => {
                     const Icon = ICONS[sector.id] ?? Layers;
                     return (
-                        <Reveal key={sector.id} delay={(i % 3) * 0.08} width="100%">
-                            <div className="group relative h-full bg-surface p-8 transition-colors duration-300 hover:bg-surface-2 md:p-10">
-                                <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-lg border border-white/10 bg-background text-accent transition-colors duration-300 group-hover:border-accent group-hover:bg-accent group-hover:text-accent-foreground">
-                                    <Icon size={26} />
+                        <Reveal key={sector.id} delay={(i % 3) * 0.06} width="100%">
+                            <div className="group h-full rounded-xl border border-line bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-card">
+                                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-brand/8 text-brand transition-colors duration-300 group-hover:bg-brand group-hover:text-white">
+                                    <Icon size={24} />
                                 </div>
-                                <h3 className="font-heading text-xl font-bold uppercase tracking-wide text-foreground">
+                                <h3 className="font-display text-lg font-semibold tracking-tight text-foreground">
                                     {sector.title}
                                 </h3>
-                                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                                     {sector.description}
                                 </p>
-                                <span className="mt-6 block h-px w-0 bg-accent transition-all duration-500 group-hover:w-12" />
                             </div>
                         </Reveal>
                     );

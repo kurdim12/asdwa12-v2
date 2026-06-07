@@ -7,9 +7,8 @@ import { CheckCircle2, AlertCircle } from "lucide-react";
 type Status = "idle" | "submitting" | "success" | "error";
 
 const inputClass =
-    "w-full border border-white/10 bg-background px-4 py-3.5 text-foreground transition-colors placeholder:text-muted-foreground/60 focus:border-accent focus:outline-none";
-const labelClass =
-    "mb-2 block font-heading text-xs uppercase tracking-widest text-muted-foreground";
+    "w-full rounded-lg border border-line bg-white px-4 py-3 text-foreground transition-colors placeholder:text-muted-foreground/60 focus:border-brand focus:outline-none";
+const labelClass = "mb-2 block text-sm font-medium text-foreground";
 
 export function ContactForm() {
     const [status, setStatus] = useState<Status>("idle");
@@ -37,10 +36,10 @@ export function ContactForm() {
 
     if (status === "success") {
         return (
-            <div className="flex flex-col items-center justify-center gap-4 border border-accent/30 bg-accent/5 p-12 text-center">
-                <CheckCircle2 className="text-accent" size={48} />
-                <h3 className="font-heading text-2xl font-bold uppercase tracking-tight text-foreground">
-                    Message Sent
+            <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-brand/30 bg-brand/5 p-12 text-center">
+                <CheckCircle2 className="text-brand" size={44} />
+                <h3 className="font-display text-2xl font-semibold tracking-tight text-foreground">
+                    Message sent
                 </h3>
                 <p className="max-w-sm text-muted-foreground">
                     Thank you for reaching out. Our team will get back to you shortly.
@@ -56,9 +55,8 @@ export function ContactForm() {
             data-netlify="true"
             data-netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
-            className="space-y-6"
+            className="space-y-5"
         >
-            {/* Netlify form plumbing */}
             <input type="hidden" name="form-name" value="contact" />
             <p className="hidden">
                 <label>
@@ -66,7 +64,7 @@ export function ContactForm() {
                 </label>
             </p>
 
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                     <label htmlFor="name" className={labelClass}>
                         Name
@@ -101,14 +99,14 @@ export function ContactForm() {
             </div>
 
             {status === "error" && (
-                <p className="flex items-center gap-2 text-sm text-red-400">
+                <p className="flex items-center gap-2 text-sm text-red-600">
                     <AlertCircle size={16} /> Something went wrong. Please try again or email us
                     directly.
                 </p>
             )}
 
             <Button type="submit" size="lg" className="w-full" disabled={status === "submitting"}>
-                {status === "submitting" ? "Sending…" : "Send Message"}
+                {status === "submitting" ? "Sending…" : "Send message"}
             </Button>
         </form>
     );
